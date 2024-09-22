@@ -7,6 +7,7 @@ class TgBot:
     token: str # Токен доступа к боту
     hf_token: str # Токен для API HF
     groq_token: str # Токен для API Groq
+    proxy_token: str # Токен для proxy
 
 
 @dataclass
@@ -23,6 +24,7 @@ def load_config(path: str | None = None) -> Config:
             token=env("BOT_TOKEN"),
             hf_token=env("HF_TOKEN"),
             groq_token=env("GROQ_TOKEN"),
+            proxy_token=env("PROXY_TOKEN"),
         )
     )
 

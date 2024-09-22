@@ -1,10 +1,15 @@
 import os
+
+import httpx
 import openai
 from config_data.config import CONFIG
 
 client = openai.OpenAI(
     base_url="https://api.groq.com/openai/v1",
     api_key=CONFIG.tg_bot.groq_token,
+    http_client=httpx.Client(
+        proxies=CONFIG.tg_bot.proxy_token
+    )
 )
 
 
