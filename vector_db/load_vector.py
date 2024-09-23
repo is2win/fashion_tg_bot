@@ -1,5 +1,7 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+from loguru import logger
+
 
 # Если у вас нет видеокарты, укажите 'device': 'cpu'
 hf_embeddings_model = HuggingFaceEmbeddings(
@@ -18,3 +20,5 @@ retriever = db.as_retriever(
     k=10,  # количество возвращаемых документов (Default: 4)
     score_threshold=0.8,  # минимальный порог для поиска "similarity_score_threshold"
 )
+
+logger.info(f"Asked for retriever....")

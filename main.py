@@ -6,22 +6,38 @@ from aiogram.enums import ParseMode
 from config_data.config import Config, load_config, CONFIG
 from keyboards.main_menu import set_main_menu
 from handlers import user_handlers
+from loguru import logger
+from pathlib import Path
+import logging
 
 
-# Инициализация логгера
-logger = logging.getLogger(__name__)
+# Отключаем стандартный логгер aiogram и заменяем его на loguru
+logging.getLogger('aiogram').handlers = [logging.NullHandler()]  # Отключаем стандартный логгер
+class InterceptHandler(logging.Handler):
+    def emit(self, record):
+        # Передаем все логи из aiogram в loguru
+        level = logger.level(record.levelname).name if logger.level(record.levelname, None) else record.levelno
+        logger.log(level, record.getMessage())
 
+logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
 
 # Асинхронная функция запуска бота
 async def main():
+    # Инициализация логгера
+    log_path = Path(__file__).parent.absolute() / "applogs"
+    log_path.mkdir(exist_ok=True)
+    log_path = log_path / "main_{time}.log"
     # Конфигурируем логирование
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(filename)s:%(lineno)d #%(levelname)-8s '
-               '[%(asctime)s] - %(name)s - %(message)s')
+    logger.add(
+        log_path,
+        rotation="10 MB",
+        backtrace=True,
+        diagnose=True,
+        level="TRACE",
+    )
 
     # Выводим в консоль информацию о начале запуска бота
-    logger.info('Starting bot')
+    logger.success('Starting bot')
 
     # Загружаем конфиг в переменную config
     # config: Config = load_config()

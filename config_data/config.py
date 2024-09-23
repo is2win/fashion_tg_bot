@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from environs import Env
-
+from loguru import logger
 
 @dataclass
 class TgBot:
@@ -30,4 +30,4 @@ def load_config(path: str | None = None) -> Config:
 
 
 CONFIG = load_config()
-print('загрузка конфига произошла')
+logger.success('Загрузка конфига произошла')
